@@ -2,8 +2,8 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 # Replace with your bot token
-BOT_TOKEN = "7617620782:AAEpmcwWHpabyz8wtP1118moes5sQZNgEXE"
-WEBGL_GAME_URL = "https://mentalmatics-telegram.vercel.app/"  # Your Unity WebGL Game URL
+BOT_TOKEN = "7780939839:AAGi6Uexdw8VRu08VKL4JUsFdJhxfCBn2oI"
+WEBGL_GAME_URL = "https://4bb8-2404-4404-4138-b500-b3a3-aa7a-bc71-c66c.ngrok-free.app"  # Your Unity WebGL Game URL
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
