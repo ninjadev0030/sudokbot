@@ -2,7 +2,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 # Replace with your bot token
-BOT_TOKEN = "7617620782:AAEpmcwWHpabyz8wtP1118moes5sQZNgEXE"
+BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
 WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"  # Your Unity WebGL Game URL
 
 bot = telebot.TeleBot(BOT_TOKEN)
