@@ -1,17 +1,6 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
-import firebase_admin
-from firebase_admin import credentials, firestore
 import requests
-
-# Initialize Firebase using serviceAccountKey.json
-try:
-    cred = credentials.Certificate("setting.json")
-    firebase_admin.initialize_app(cred)
-    db = firestore.client()
-    print("Firebase initialized successfully.")
-except Exception as e:
-    print(f"Error initializing Firebase: {e}")
 
 # Bot Token
 BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
