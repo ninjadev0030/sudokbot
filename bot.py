@@ -16,6 +16,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 def save_referral(new_user_id, referrer_id):
     """Save referral in Firestore if user is new."""
+    print("saving data")
     user_ref = db.collection("referrals").document(str(new_user_id)).get()
     
     if not user_ref.exists:  # User is new
@@ -29,12 +30,12 @@ def send_game_button(message):
     text = message.text
     referrer_id = None
     print(f"Referral text: {text}")
+    print(f"Chat id : {chat_id}")
     # Extract referral code from /start
     if text.startswith("/start "):
         ref_code = text.split(" ")[1]
         if ref_code.isdigit():  # Ensure it's a valid user ID
             referrer_id = int(ref_code)
-            print(f"Referral code extracted: {ref_code}")
 
     # Save referral if valid
     if referrer_id and referrer_id != chat_id:
