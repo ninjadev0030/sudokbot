@@ -34,6 +34,7 @@ def send_game_button(message):
         ref_code = text.split(" ")[1]
         if ref_code.isdigit():  # Ensure it's a valid user ID
             referrer_id = int(ref_code)
+            print(f"Referral code extracted: {ref_code}")
 
     # Save referral if valid
     if referrer_id and referrer_id != chat_id:
