@@ -13,11 +13,7 @@ def save_referral(new_user_id, referrer_id):
     """Send referral data to the server."""
     print("Saving user info...")
     try:
-        headers = {
-            'Authorization': 'Bearer YOUR_ACCESS_TOKEN',
-            'Content-Type': 'application/json'
-        }
-        response = requests.post(SERVER_URL, json={"new_user_id": new_user_id, "referrer_id": referrer_id}, headers=headers)
+        response = requests.post(SERVER_URL, json={"new_user_id": new_user_id, "referrer_id": referrer_id})
         if response.status_code == 200:
             print(f"Referral saved for new user {new_user_id} with referrer {referrer_id}.")
             return True
