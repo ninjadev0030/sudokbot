@@ -20,6 +20,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 def save_referral(new_user_id, referrer_id):
     """Save referral in Firestore if user is new."""
+    print("saving user info")
     try:
         user_ref = db.collection("referrals").document(str(new_user_id)).get()
 
