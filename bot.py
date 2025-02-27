@@ -38,7 +38,7 @@ def send_game_button(message):
             print(f"Referral code extracted: {ref_code}")  # Print the referral code
 
     # Save referral if valid
-    save_referral(chat_id, referrer_id):
+    save_referral(chat_id, referrer_id)
 
     # Create inline keyboard with Web App button
     markup = InlineKeyboardMarkup()
