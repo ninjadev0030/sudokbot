@@ -1,30 +1,25 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
-import sqlite3  # For storing referrals
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Initialize Firebase using serviceAccountKey.json
+cred = credentials.Certificate("sudock-91e72-firebase-adminsdk-fbsvc-5636574977.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 
 # Bot Token
-BOT_TOKEN = "YOUR_BOT_TOKEN"
+BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
 WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-# Database connection
-conn = sqlite3.connect("referrals.db", check_same_thread=False)
-cursor = conn.cursor()
-
-# Create table if not exists
-cursor.execute('''CREATE TABLE IF NOT EXISTS referrals (
-                    user_id INTEGER PRIMARY KEY,
-                    referrer_id INTEGER
-                )''')
-conn.commit()
-
 def save_referral(new_user_id, referrer_id):
-    """Save referral to database if user is new."""
-    cursor.execute("SELECT * FROM referrals WHERE user_id=?", (new_user_id,))
-    if not cursor.fetchone():  # Only save if the user is new
-        cursor.execute("INSERT INTO referrals (user_id, referrer_id) VALUES (?, ?)", (new_user_id, referrer_id))
-        conn.commit()
+    """Save referral in Firestore if user is new."""
+    user_ref = db.collection("referrals").document(str(new_user_id)).get()
+    
+    if not user_ref.exists:  # User is new
+        db.collection("referrals").document(str(new_user_id)).set({"referrer_id": referrer_id})
         return True
     return False
 
@@ -34,13 +29,13 @@ def send_game_button(message):
     text = message.text
     referrer_id = None
 
-    # Extract referral code from start command
+    # Extract referral code from /start
     if text.startswith("/start "):
-        ref_code = text.split(" ")[1]  # Get ref code after /start
+        ref_code = text.split(" ")[1]
         if ref_code.isdigit():  # Ensure it's a valid user ID
             referrer_id = int(ref_code)
 
-    # If there's a referral, save it
+    # Save referral if valid
     if referrer_id and referrer_id != chat_id:
         if save_referral(chat_id, referrer_id):
             bot.send_message(referrer_id, f"🎉 Someone joined using your referral link! (User ID: {chat_id})")
