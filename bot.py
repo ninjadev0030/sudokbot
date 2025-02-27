@@ -4,10 +4,14 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 # Initialize Firebase using serviceAccountKey.json
-cred = credentials.Certificate("setting.json")
-firebase_admin.initialize_app(cred)
-db = firestore.client()
-
+try:
+    cred = credentials.Certificate("setting.json")
+    firebase_admin.initialize_app(cred)
+    db = firestore.client()
+    print("Firebase initialized successfully.")
+except Exception as e:
+    print(f"Error initializing Firebase: {e}")
+    
 # Bot Token
 BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
 WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"
@@ -16,7 +20,6 @@ bot = telebot.TeleBot(BOT_TOKEN)
 
 def save_referral(new_user_id, referrer_id):
     """Save referral in Firestore if user is new."""
-    print("saving data")
     user_ref = db.collection("referrals").document(str(new_user_id)).get()
     
     if not user_ref.exists:  # User is new
