@@ -2,7 +2,7 @@ import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import firebase_admin
 from firebase_admin import credentials, firestore
-import time
+import requests
 
 # Initialize Firebase using serviceAccountKey.json
 try:
@@ -16,25 +16,21 @@ except Exception as e:
 # Bot Token
 BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
 WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"
+SERVER_URL = "https://sudockserver.vercel.app/saveReferral"
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
 def save_referral(new_user_id, referrer_id):
-    """Save referral in Firestore if user is new."""
+    """Send referral data to the server."""
     print("Saving user info...")
     try:
-        start_time = time.time()
-        user_ref = db.collection("referrals").document(str(new_user_id)).get()
-        print(f"Checked user existence in {time.time() - start_time:.2f} seconds.")
-
-        if not user_ref.exists:  # User is new
-            start_time = time.time()
-            db.collection("referrals").document(str(new_user_id)).set({"referrer_id": referrer_id})
-            print(f"Referral saved for new user {new_user_id} with referrer {referrer_id} in {time.time() - start_time:.2f} seconds.")
+        response = requests.post(SERVER_URL, json={"new_user_id": new_user_id, "referrer_id": referrer_id})
+        if response.status_code == 200:
+            print(f"Referral saved for new user {new_user_id} with referrer {referrer_id}.")
             return True
         else:
-            print(f"User {new_user_id} already exists.")
-        return False
+            print(f"Error saving referral: {response.json().get('error')}")
+            return False
     except Exception as e:
         print(f"Error saving referral: {e}")
         return False
