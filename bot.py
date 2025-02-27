@@ -11,7 +11,7 @@ try:
     print("Firebase initialized successfully.")
 except Exception as e:
     print(f"Error initializing Firebase: {e}")
-    
+
 # Bot Token
 BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
 WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"
@@ -21,8 +21,9 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def save_referral(new_user_id, referrer_id):
     """Save referral in Firestore if user is new."""
     user_ref = db.collection("referrals").document(str(new_user_id)).get()
-    
+    print("no error getting user")
     if not user_ref.exists:  # User is new
+        print("user not exist")
         db.collection("referrals").document(str(new_user_id)).set({"referrer_id": referrer_id})
         return True
     return False
