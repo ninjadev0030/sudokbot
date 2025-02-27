@@ -28,7 +28,7 @@ def send_game_button(message):
     chat_id = message.chat.id
     text = message.text
     referrer_id = None
-
+    print(f"Referral text: {text}")
     # Extract referral code from /start
     if text.startswith("/start "):
         ref_code = text.split(" ")[1]
