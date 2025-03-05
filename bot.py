@@ -1,6 +1,8 @@
 import telebot
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 import requests
+import qrcode
+from io import BytesIO
 
 # Bot Token
 BOT_TOKEN = "7879631782:AAHgMBYY764r5hjbmpHECPcpfYvZzqQHhog"
@@ -8,6 +10,19 @@ WEBGL_GAME_URL = "https://sudok-tau.vercel.app/"
 SERVER_URL = "https://sudockserver.vercel.app/saveReferral"
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+def generate_qr_code(data):
+    """Generate a QR code for the given data."""
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    return img
 
 def save_referral(new_user_id, referrer_id):
     """Send referral data to the server."""
@@ -26,9 +41,23 @@ def save_referral(new_user_id, referrer_id):
 
 def connect_ton_wallet(chat_id):
     """Function to handle TON wallet connection."""
-    # Here you would add the logic to connect the TON wallet.
-    # This could involve generating a QR code, sending a link, etc.
-    bot.send_message(chat_id, "Please follow this link to connect your TON wallet: [Link to TON Wallet Connection]")
+    try:
+        # Generate a unique connection link or data
+        connection_link = "https://tonwallet.io/connect?user_id=" + str(chat_id)
+
+        # Generate QR code
+        qr_img = generate_qr_code(connection_link)
+
+        # Save QR code to a bytes buffer
+        buffer = BytesIO()
+        qr_img.save(buffer, format="PNG")
+        buffer.seek(0)
+
+        # Send QR code to the user
+        bot.send_photo(chat_id, buffer, caption="Scan this QR code to connect your TON wallet.")
+
+    except Exception as e:
+        bot.send_message(chat_id, f"Error connecting TON wallet: {e}")
 
 @bot.message_handler(commands=['start', 'game'])
 def send_game_button(message):
